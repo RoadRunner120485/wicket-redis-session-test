@@ -33,7 +33,6 @@ public class Application {
 
         rb.setFilter(wicketFilter);
         rb.setUrlPatterns(Collections.singletonList("/*"));
-        rb.setOrder(Ordered.LOWEST_PRECEDENCE);
 
         return rb;
     }

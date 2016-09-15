@@ -2,12 +2,12 @@ package de.sturmm.wicket.nonstickysessions.data;
 
 import lombok.Builder;
 import lombok.Getter;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.wicket.mock.MockWebResponse;
 import org.apache.wicket.protocol.http.BufferedWebResponse;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.collections.MultiMap;
-import org.springframework.data.util.Pair;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -54,7 +54,7 @@ public class HttpResponseData implements Serializable {
                                             .map(name -> Pair.of(name, mockResponse.getHeader(name)))
                                             .reduce(new MultiMap<String, String>(),
                                                     (headers, p) -> {
-                                                        headers.addValue(p.getFirst(), p.getSecond());
+                                                        headers.addValue(p.getLeft(), p.getRight());
                                                         return headers;
                                                     },
                                                     (m1 ,m2) -> {
