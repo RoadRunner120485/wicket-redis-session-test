@@ -1,8 +1,8 @@
 # Distributed wicket app w/o sticky sessions
-## No more lost in redirection <sup>[1]</sup>
+## No more lost in redirection <sup>1</sup>
 
-this is just a poc! Without sticky sessions the synchronization on top
-on top session cannot work. So in addition we e.g. a RequestCycleListener
+This is just a poc! Without sticky sessions the wickets synchronization 
+on top session cannot work. So in addition we need e.g. a RequestCycleListener
 that aquires locks on redis key per session. 
 
 But it shows that wicket is dynamically scalable without sticky sessions ;)
