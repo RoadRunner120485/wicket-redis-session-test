@@ -1,5 +1,5 @@
 # Distributed wicket app w/o sticky sessions
-## No mor lost in redirection <sup>[1]</sup>
+## No more lost in redirection <sup>[1]</sup>
 
 this is just a poc! Without sticky sessions the synchronization on top
 on top session cannot work. So in addition we e.g. a RequestCycleListener
