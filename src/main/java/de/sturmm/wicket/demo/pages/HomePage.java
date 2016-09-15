@@ -1,10 +1,11 @@
-package de.sturmm.wicket;
+package de.sturmm.wicket.demo.pages;
 
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Session;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
@@ -14,6 +15,8 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 public class HomePage extends WebPage {
 
     private static final MetaDataKey<String> TEST = new MetaDataKey<String>() { };
+
+    private int clickCounter = 0;
 
     public HomePage(PageParameters parameters) {
         super(parameters);
@@ -26,24 +29,28 @@ public class HomePage extends WebPage {
             data = hello;
         }
 
-        add(new Label("label", data));
+        add(new Label("label", "Hello"));
+        add(new Label("clickCounter", PropertyModel.of(this, "clickCounter")));
 
         add(new Link<Void>("next") {
             @Override
             public void onClick() {
-                setResponsePage(getNextPage());
+                setResponsePage(getNextPage().setClickCounter(++clickCounter));
             }
         });
     }
 
-    protected IRequestablePage getNextPage() {
-        return new HomePage(getPageParameters()) {
+    protected NextPage getNextPage() {
+        return new NextPage(getPageParameters()) {
             @Override
-            protected IRequestablePage getNextPage() {
+            protected HomePage getNextPage() {
                 return HomePage.this;
             }
         };
     }
 
-
+    public WebPage setClickCounter(int clickCounter) {
+        this.clickCounter = clickCounter;
+        return this;
+    }
 }
