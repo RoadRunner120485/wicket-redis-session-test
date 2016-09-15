@@ -50,19 +50,6 @@ public class HttpResponseData implements Serializable {
         // extract ServletResponse to get data which are not accessible on BufferedWebResponse
         final HttpServletResponse containerResponse = (HttpServletResponse) source.getContainerResponse();
 
-        final MultiMap<String, String> headersMap = mockResponse.getHeaderNames().stream()
-                                            .map(name -> Pair.of(name, mockResponse.getHeader(name)))
-                                            .reduce(new MultiMap<String, String>(),
-                                                    (headers, p) -> {
-                                                        headers.addValue(p.getLeft(), p.getRight());
-                                                        return headers;
-                                                    },
-                                                    (m1 ,m2) -> {
-                                                        if (m1 == m2) return m1;
-                                                        else m1.putAll(m2);
-                                                        return m1;
-                                                    });
-
         return HttpResponseData.builder()
                 .status(mockResponse.getStatus() == null ? containerResponse.getStatus() : mockResponse.getStatus())
                 .body(mockResponse.getTextResponse().toString())
@@ -71,7 +58,18 @@ public class HttpResponseData implements Serializable {
                 .encoding(containerResponse.getCharacterEncoding())
                 .contentType(mockResponse.getContentType())
                 .cookies(new ArrayList<>(mockResponse.getCookies()))
-                .headers(headersMap)
+                .headers(mockResponse.getHeaderNames().stream()
+                        .map(name -> Pair.of(name, mockResponse.getHeader(name)))
+                        .reduce(new MultiMap<String, String>(),
+                                (headers, p) -> {
+                                    headers.addValue(p.getLeft(), p.getRight());
+                                    return headers;
+                                },
+                                (m1, m2) -> {
+                                    if (m1 == m2) return m1;
+                                    else m1.putAll(m2);
+                                    return m1;
+                                }))
                 .build();
     }
 
