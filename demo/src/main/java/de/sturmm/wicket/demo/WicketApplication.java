@@ -13,6 +13,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.wicketstuff.pageserializer.fast2.Fast2WicketSerializer;
 
 /**
  * Created by sturmm on 12.09.16.
@@ -28,14 +29,8 @@ public class WicketApplication extends WebApplication implements ApplicationCont
     protected void init() {
         super.init();
         getComponentInstantiationListeners().add(new SpringComponentInjector(this, applicationContext));
-        new NonStickySessionsModule(this);
-
-        setPageManagerProvider(new DefaultPageManagerProvider(this) {
-            @Override
-            protected IDataStore newDataStore() {
-                return new HttpSessionDataStore(getPageManagerContext(), new PageNumberEvictionStrategy(20));
-            }
-        });
+        NonStickySessionsModule.setup(this, getPageManagerContext());
+        getFrameworkSettings().setSerializer(new Fast2WicketSerializer());
     }
     @Override
     public Class<? extends Page> getHomePage() {
